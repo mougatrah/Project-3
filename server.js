@@ -8,17 +8,18 @@ const cors = require("cors");
 const app = express();
 const routes = require("./routes");
 const db = require("./models/");
-const seed = require("./models/seed/seed-db");
+const flash = require("connect-flash");
+
 
 const PORT = process.env.PORT || 5000;
 app.use(express.static("client/build"));
 app.use(function(req, res, next) {
-  if (req.url != '/favicon.ico') {
+  if (req.url != "/favicon.ico") {
     return next();
   } else {
     res.status(200);
-    res.header('Content-Type', 'image/x-icon');
-    res.header('Cache-Control', 'max-age=4294880896');
+    res.header("Content-Type", "image/x-icon");
+    res.header("Cache-Control", "max-age=4294880896");
     res.end();
   }
 });
@@ -38,13 +39,13 @@ app.use(
       secure: false
     }
   })
-
 );
 
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(passport.initialize());
-app.use(passport.session());  
+app.use(passport.session());
+app.use(flash());
 app.use(express.static("client/build"));
 app.use(routes);
 // Serve up static assets (usually on heroku)
@@ -60,12 +61,9 @@ if (process.env.NODE_ENV === "test") {
 
 db.sequelize
   .sync(syncOptions)
-  // .then(() => {
-  //   seed.insert();
-  // })
   .then(function() {
     app.listen(PORT, function() {
       console.log(`Listening on port ${PORT}`);
     });
   });
-  module.exports = app.listen(3000);
+module.exports = app.listen(3000);
