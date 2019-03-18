@@ -19,12 +19,10 @@ router.route("/auth/google/callback")
     res.redirect("/home");
   });
 
+
 router.route("/api/login")
-  .post(passport.authenticate('local'), function (req, res) {
-    console.log("AFTER LOCAL LOGIN");
-    if (!res.headersSent) {
-      res.redirect("/home");
-    }
+  .post(passport.authenticate('local'), function(req, res){
+    res.redirect("/home");
   });
 
 router.route("/api/current_user")

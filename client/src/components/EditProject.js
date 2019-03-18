@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
+import { Link } from "react-router-dom";
 import { Button, Modal, ModalHeader, ModalBody, Label, Input, ModalFooter } from 'reactstrap';
-import ImportImageForm from "./ImageInputForm";
 import ImageInputForm from './ImageInputForm';
 
 class EditProject extends Component {
@@ -8,30 +8,24 @@ class EditProject extends Component {
         super(props);
         this.state = {
             modal: false,
-            backdrop: true
+            backdrop: true,
         };
         this.toggle = this.toggle.bind(this);
     }
 
     toggle() {
-        console.log("TOGGLE")
         this.setState({
             modal: !this.state.modal
-        }, function(){
-            console.log("TOOGGLE2")
         })
     }
   
     handleChange = event => {
-        console.log("handle change")
-
         const updateProject = { ...this.props.project, [event.currentTarget.name]: event.currentTarget.value };
         this.props.updateUserProject(this.props.index, this.props.project.id, updateProject);
     }
 
     render() {
-        const { title, description, image, link } = this.props.details;
-        console.log("HEY!")
+        const { title, description, image, id } = this.props.details;
         return (
             <div>
                 <ul>
@@ -41,9 +35,9 @@ class EditProject extends Component {
                         <button
                             className="btn btn-outline-info btn-sm update-btn" data-toggle="modal" onClick={this.toggle}>Update</button>
                         <h3 className="project-title">{title}</h3>
-                        <img className="img img-fluid" src={image} alt={title} />
+                        <img className="project-image" src={image} alt={title} />
                         <p>{description}</p>
-                        <a className="project-link" href={link ? link : "#"}>See Project</a>
+                        <Link to={"/project/" + id}>View Project</Link>
                     </li>
                 </ul>
                 {/* Updating Project modal */}
@@ -68,6 +62,15 @@ class EditProject extends Component {
                             className="form-control"
                             id="inputTitle"
                             placeholder="Link to your project" />
+                             <Label for="inputLink">Funding Link</Label>
+                        <Input
+                            name="fundLink"
+                            onChange={this.handleChange}
+                            value={this.props.project.fundLink}
+                            type="text"
+                            className="form-control"
+                            id="inputTitle"
+                            placeholder="Link to fund your project" />
                         <Label for="inputDescription">Description</Label>
                         <textarea
                             name="description"
@@ -79,13 +82,6 @@ class EditProject extends Component {
                             placeholder="write a description here...">
                         </textarea>
                         <Label for="inputImage">Upload an Image</Label>
-                        {/* <Input
-                            name="image"
-                            onChange={this.handleImageChange}
-                            value={""}
-                            type="file"
-                            className="form-control-file"
-                            id="uploadImage" /> */}
                             <ImageInputForm 
                                 image="Project image:"
                                 action={`/api/projects/${this.props.project.id}/image`}

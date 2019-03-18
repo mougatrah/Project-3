@@ -27,7 +27,13 @@ class LoginForm extends Form {
       const { data } = this.state;
       console.log("SUBMIT")
 
-      login(data.email, data.password);
+      login(data.email, data.password).then(() => {
+        console.log("LOL")
+        window.location.href = "/home";
+      })
+      .catch(err => {
+        document.getElementById("loginErr").innerHTML = "Invalid email or password."
+      });
 
 
     } catch (error) {
@@ -39,9 +45,14 @@ class LoginForm extends Form {
       }
     }
     // console.log("jwt " + Object.keys(jwt.data))
-    window.location.href = "/home";
+   
   };
-
+  gitHubOnClick() {
+    window.location.href="/auth/github";
+  }
+  googleOnClick() {
+    window.location.href="/auth/google";
+  }
   render() {
     return (
       <div>
@@ -52,6 +63,7 @@ class LoginForm extends Form {
             <hr />
           </div>
           <form className="loginForm" onSubmit={this.handleSubmit}>
+            <div className="errorText" id="loginErr"></div>
             {this.renderInput("email", "Email")}
             {this.renderInput("password", "Password", "password")}
             {this.renderButton("Login")}
@@ -60,8 +72,8 @@ class LoginForm extends Form {
             <hr />
             <h6>Login with GitHub or Google+</h6>
           </div>
-          <GitHubLoginBtn />
-          <GoogleLoginBtn />
+          <GitHubLoginBtn gitHubOnClick={this.gitHubOnClick}/>
+          <GoogleLoginBtn googleOnClick={this.googleOnClick}/>
         </Wrapper>
       </div>
     );
