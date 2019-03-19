@@ -4,12 +4,12 @@ const authRoutes = require("./api/authRoutes");
 const apiRoutes = require("./api/apiRoutes");
 const imageRoutes = require("./api/imageRoutes");
 const apiTestRoutes = require("./api/testRoutes");
-router.use(function(req, res, next) {
+router.use(function (req, res, next) {
   var { path } = req;
   console.log("gatekeeper : " + path);
   switch (path) {
     case "/api/logout":
-    break;
+      break;
     case "/":
     case "/login":
     case "/api/user":
@@ -30,7 +30,7 @@ router.use(function(req, res, next) {
         break;
       }
       break;
-      
+
   }
   next();
 });
@@ -42,7 +42,7 @@ router.use(authRoutes);
 router.use(imageRoutes);
 
 // If no API routes are hit, send the React app
-router.use(function(req, res) {
+router.use(function (req, res) {
   console.log(req.path);
   if (!res.headersSent) {
     res.sendFile(path.join(__dirname, "../client/build/index.html"));

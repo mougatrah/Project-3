@@ -8,12 +8,11 @@ const cors = require("cors");
 const app = express();
 const routes = require("./routes");
 const db = require("./models/");
-const flash = require("connect-flash");
 
 
 const PORT = process.env.PORT || 5000;
 app.use(express.static("client/build"));
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   if (req.url != "/favicon.ico") {
     return next();
   } else {
@@ -45,7 +44,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(flash());
 app.use(express.static("client/build"));
 app.use(routes);
 // Serve up static assets (usually on heroku)
@@ -61,8 +59,8 @@ if (process.env.NODE_ENV === "test") {
 
 db.sequelize
   .sync(syncOptions)
-  .then(function() {
-    app.listen(PORT, function() {
+  .then(function () {
+    app.listen(PORT, function () {
       console.log(`Listening on port ${PORT}`);
     });
   });

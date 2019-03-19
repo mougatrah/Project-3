@@ -281,7 +281,17 @@ router
       .catch(err => res.send(err));
   });
 
-router.route("/api/favorites/:id").delete(function(req, res) {
+router.route("/api/favorites/:id")
+  .get(function(req, res) {
+    db.Favorite.findAll({
+      where: {
+        projectID: req.params.id
+      }
+    }).then((dbFavs) =>{
+      req.send(dbFavs.length);
+    })
+  })
+  .delete(function(req, res) {
   console.log(req.params);
   db.Favorite.destroy({
     where: {
