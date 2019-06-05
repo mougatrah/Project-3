@@ -16,7 +16,7 @@ cloudinary.config({
 // user routes
 router
   .route("/api/user")
-  .get(function(req, res) {
+  .get(function (req, res) {
     db.Auths.findOne({
       where: {
         id: req.body.id
@@ -25,7 +25,7 @@ router
       res.send(dbUser);
     });
   })
-  .post(function(req, res) {
+  .post(function (req, res) {
     db.Auths.findOne({
       where: {
         email: req.body.email
@@ -49,71 +49,77 @@ router
     });
   });
 
-router.route("/api/user/update").put(function(req, res) {
-  db.Auths.update(
-    { firstName: req.body.name },
-    {
-      where: {
-        id: req.user.id
+router
+  .route("/api/user/update").put(function (req, res) {
+    db.Auths.update(
+      { firstName: req.body.name },
+      {
+        where: {
+          id: req.user.id
+        }
       }
-    }
-  ).then(dbAuth => {
-    res.send(dbAuth);
+    ).then(dbAuth => {
+      res.send(dbAuth);
+    });
   });
-});
 
-router.route("/api/users").get(function(req, res) {
-  db.Auths.findAll().then(dbUsers => {
-    res.send(dbUsers);
+router
+  .route("/api/users").get(function (req, res) {
+    db.Auths.findAll().then(dbUsers => {
+      res.send(dbUsers);
+    });
   });
-});
 
-router.route("/api/user/:id").get(function(req, res) {
-  db.Auths.findOne({
-    where: {
-      id: req.param.id
-    }
-  }).then(dbUser => {
-    res.send(dbUser);
+router
+  .route("/api/user/:id").get(function (req, res) {
+    db.Auths.findOne({
+      where: {
+        id: req.param.id
+      }
+    }).then(dbUser => {
+      res.send(dbUser);
+    });
   });
-});
 
-router.route("/api/user/login").get(function(req, res) {
-  db.Auths.findOne({
-    where: {
-      email: req.params.email
-    }
-  }).then(dbUser => {
-    if (bcrypt.compareSync(req.params.password, dbUser.password)) {
-      req.user = dbUser;
-    } else {
-      res.sendStatus(401);
-    }
+router
+  .route("/api/user/login").get(function (req, res) {
+    db.Auths.findOne({
+      where: {
+        email: req.params.email
+      }
+    }).then(dbUser => {
+      if (bcrypt.compareSync(req.params.password, dbUser.password)) {
+        req.user = dbUser;
+      } else {
+        res.sendStatus(401);
+      }
+    });
   });
-});
 
 // Project Routes //
 
-router.route("/api/projects/all").get(function(req, res) {
-  db.Projects.findAll().then(dbProjects => {
-    res.json(dbProjects);
+router
+  .route("/api/projects/all").get(function (req, res) {
+    db.Projects.findAll().then(dbProjects => {
+      res.json(dbProjects);
+    });
   });
-});
 
-router.route("/api/projects/favorites").get(function(req, res) {
-  console.log(req.query);
-  db.Projects.findAll({
-    where: {
-      id: req.query.ids
-    }
-  }).then(dbProjects => {
-    res.send(dbProjects);
+router
+  .route("/api/projects/favorites").get(function (req, res) {
+    console.log(req.query);
+    db.Projects.findAll({
+      where: {
+        id: req.query.ids
+      }
+    }).then(dbProjects => {
+      res.send(dbProjects);
+    });
   });
-});
 
 router
   .route("/api/projects")
-  .get(function(req, res) {
+  .get(function (req, res) {
     db.Projects.findAll({
       where: {
         authID: req.user.id
@@ -122,7 +128,7 @@ router
       res.send(dbProject);
     });
   })
-  .post(function(req, res) {
+  .post(function (req, res) {
     console.log("POSTING " + req.body.image);
     multipartMiddleware(req, res, () => {
       if (req.files && req.files.image && req.files.image.path) {
@@ -150,7 +156,7 @@ router
       }
     });
   });
-router.route("/api/projects/:id/image").post(function(req, res) {
+router.route("/api/projects/:id/image").post(function (req, res) {
   multipartMiddleware(req, res, () => {
     if (!req.files) {
       console.log("UH OH");
@@ -184,7 +190,7 @@ router.route("/api/projects/:id/image").post(function(req, res) {
 
 router
   .route("/api/projects/:id")
-  .put(function(req, res) {
+  .put(function (req, res) {
     db.Projects.update(req.body, {
       where: {
         id: req.params.id,
@@ -194,7 +200,7 @@ router
       res.json(dbProject);
     });
   })
-  .delete(function(req, res) {
+  .delete(function (req, res) {
     db.Projects.destroy({
       where: {
         id: req.params.id,
@@ -210,50 +216,57 @@ router
     });
   });
 
-router.route("/api/projects/topfive").get(function(req, res) {
-  db.Projects.findAll({
-    limit: 5,
-    order: [["createdAt", "DESC"]]
-  }).then(dbProjects => {
-    res.json(dbProjects);
+router
+  .route("/api/projects/topfive").get(function (req, res) {
+    db.Projects.findAll({
+      limit: 5,
+      order: [["createdAt", "DESC"]]
+    }).then(dbProjects => {
+      res.json(dbProjects);
+    });
   });
-});
 
-router.route("/api/projects/search/:q").get(function(req, res) {
-  db.Projects.findAll({
-    where: {
-      $or: [
-     
-          {title: {
-            like: "%" + req.params.q + "%"
-          }},
-          {description: {
-            like: "%" + req.params.q + "%"
-          }}
-      ]
-    }
-  }).then(dbProjects => {
-    res.json(dbProjects);
-  });
-});
+router
+  .route("/api/projects/search/:q").get(function (req, res) {
+    db.Projects.findAll({
+      where: {
+        $or: [
 
-router.route("/api/project/:id").get(function(req, res) {
-  db.Projects.findOne({
-    where: {
-      id: req.params.id
-    }
-  }).then(dbProject => {
-    if(dbProject){
-      res.json(dbProject);  
-    }else{
-      res.sendStatus(404)
-    }
+          {
+            title: {
+              like: "%" + req.params.q + "%"
+            }
+          },
+          {
+            description: {
+              like: "%" + req.params.q + "%"
+            }
+          }
+        ]
+      }
+    }).then(dbProjects => {
+      res.json(dbProjects);
+    });
   });
-});
+
+router
+  .route("/api/project/:id").get(function (req, res) {
+    db.Projects.findOne({
+      where: {
+        id: req.params.id
+      }
+    }).then(dbProject => {
+      if (dbProject) {
+        res.json(dbProject);
+      } else {
+        res.sendStatus(404)
+      }
+    });
+  });
 
 router
   .route("/api/favorites")
-  .get(function(req, res) {
+  .get(function (req, res) {
     db.Favorite.findAll({
       attributes: ["projectID"],
       where: {
@@ -263,7 +276,7 @@ router
       res.send(dbFavorite);
     });
   })
-  .post(function(req, res) {
+  .post(function (req, res) {
     console.log(req.body);
     db.Favorite.findOrCreate({
       where: {
@@ -281,63 +294,67 @@ router
       .catch(err => res.send(err));
   });
 
-router.route("/api/favorites/:id")
-  .get(function(req, res) {
+router
+  .route("/api/favorites/:id")
+  .get(function (req, res) {
     db.Favorite.findAll({
       where: {
         projectID: req.params.id
       }
-    }).then((dbFavs) =>{
+    }).then((dbFavs) => {
       req.send(dbFavs.length);
     })
   })
-  .delete(function(req, res) {
-  console.log(req.params);
-  db.Favorite.destroy({
-    where: {
-      userID: req.user.id,
-      projectID: req.params.id
-    }
-  })
-    .then((req, res) => {
-      res.sendStatus(200);
-    })
-    .catch(err => res.send(err));
-});
-
-router.route("/api/comments").post(function(req, res) {
-  if(req.body.ProjectId){
-    db.Review.create({
-      image: req.body.image,
-      name: req.body.name,
-      comment: req.body.comment,
-      ProjectId: req.body.ProjectId
-    }).then(dbReview => {
-      res.json(dbReview);
-    });
-  }else{
-    res.sendStatus(404)
-  }
-});
-
-router.route("/api/comments/:id").get(function(req, res) {
-  if(req.params.id){
-    db.Projects.findOne({
+  .delete(function (req, res) {
+    console.log(req.params);
+    db.Favorite.destroy({
       where: {
-        id: req.params.id
-      }
-    }).then((dbProject) => {
-      if(dbProject){
-        db.Review.findAll({
-          order: [["createdAt", "DESC"]],
-          where: { ProjectId: req.params.id }
-        }).then(dbReview => res.json(dbReview));
-      } else {
-        res.json({})
+        userID: req.user.id,
+        projectID: req.params.id
       }
     })
-  }else{
-    res.json({})
-  }
-});
+      .then((req, res) => {
+        res.sendStatus(200);
+      })
+      .catch(err => res.send(err));
+  });
+
+router
+  .route("/api/comments").post(function (req, res) {
+    if (req.body.ProjectId) {
+      db.Review.create({
+        image: req.body.image,
+        name: req.body.name,
+        comment: req.body.comment,
+        ProjectId: req.body.ProjectId
+      }).then(dbReview => {
+        res.json(dbReview);
+      });
+    } else {
+      res.sendStatus(404)
+    }
+  });
+
+router
+  .route("/api/comments/:id").get(function (req, res) {
+    if (req.params.id) {
+      db.Projects.findOne({
+        where: {
+          id: req.params.id
+        }
+      }).then((dbProject) => {
+        if (dbProject) {
+          db.Review.findAll({
+            order: [["createdAt", "DESC"]],
+            where: { ProjectId: req.params.id }
+          }).then(dbReview => res.json(dbReview));
+        } else {
+          res.json({})
+        }
+      })
+    } else {
+      res.json({})
+    }
+  });
+
 module.exports = router;
