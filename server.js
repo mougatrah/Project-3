@@ -10,7 +10,7 @@ const routes = require("./routes");
 const db = require("./models/");
 
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 app.use(express.static("client/build"));
 app.use(function (req, res, next) {
   if (req.url != "/favicon.ico") {
